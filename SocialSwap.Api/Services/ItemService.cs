@@ -12,29 +12,29 @@ namespace SocialSwap.Api.Services
             _repo = repo;
         }
 
-        public Item Create(Item entity)
+        public async Task<Item> Create(Item entity)
         {
-            return _repo.Create(entity);
+            return await _repo.Create(entity);
         }
 
-        public Item Delete(Item entity)
+        public async Task<Item> Delete(Item entity)
         {
-            return _repo.Delete(entity);
+            return await _repo.Delete(entity);
         }
 
-        public Item Get(int id)
+        public async Task<Item> Get(int id)
         {
-            return _repo.Get(id);
+            return await _repo.Get(id);
         }
 
-        public IEnumerable<Item> Index()
+        public async Task<IEnumerable<Item>> Index()
         {
-            return _repo.Index();
+            return await _repo.Index();
         }
 
-        public Item Update(Item entity)
+        public async Task<Item> Update(Item entity)
         {
-            return _repo.Update(entity);
+            return await _repo.Update(entity);
         }
     }
 }

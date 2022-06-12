@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SocialSwap.Api.Dtos
+namespace SocialSwap.Domain.AggregatesModel.IdentityAggregate
 {
-    public class AuthenticateModel
+    public class AuthenticateRequest
     {
         [Required]
-        public string Username { get; set; }
+        public string Login { get; set; }
 
         [Required]
         public string Password { get; set; }

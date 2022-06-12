@@ -13,34 +13,34 @@ namespace SocialSwap.Api.Repositories
             _ctx = ctx;
         }
 
-        public Item Create(Item entity)
+        public async Task<Item> Create(Item entity)
         {
-            _ctx.Items.AddAsync(entity);
-            _ctx.SaveChangesAsync();
+            await _ctx.Items.AddAsync(entity);
+            await _ctx.SaveChangesAsync();
             return entity;
         }
 
-        public Item Delete(Item entity)
+        public async Task<Item> Delete(Item entity)
         {
             _ctx.Items.Remove(entity);
-            _ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
             return entity;
         }
 
-        public Item Get(int id)
+        public async Task<Item> Get(int id)
         {
             return _ctx.Items.FirstOrDefault(f => f.Id == id);
         }
 
-        public IEnumerable<Item> Index()
+        public async Task<IEnumerable<Item>> Index()
         {
             return _ctx.Items.ToList();
         }
 
-        public Item Update(Item entity)
+        public async Task<Item> Update(Item entity)
         {
             _ctx.Items.Update(entity);
-            _ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
             return entity;
         }
     }

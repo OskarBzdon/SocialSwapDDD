@@ -1,56 +1,43 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using SocialSwap.Api.Providers;
+using SocialSwap.Domain.AggregatesModel.IdentityAggregate;
 using SocialSwap.Domain.AggregatesModel.UserAggregate;
-using SocialSwap.Infrastructure.DataSources;
 
 namespace SocialSwap.Api.Services
 {
     public class UserService : IUserService
     {
-        private readonly SocialSwapContext _ctx;
-        public UserService(SocialSwapContext ctx)
+        private readonly IUserRepository _repo;
+
+        public UserService(IUserRepository repo)
         {
-            _ctx = ctx;
+            _repo = repo;
         }
-        public async Task<User> Authenticate(string username, string password)
+
+        public async Task<AuthenticateResponse?> Authenticate(AuthenticateRequest model)
         {
-            User user = _ctx.Clients.FirstOrDefault(f => f.EmailAddress.Equals(username));
+            var user = await _repo.Authenticate(model);
 
-            if (user == null)
-            {
-                return null;
-            }
+            if (user == null) return null;
 
-            string passwordHash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password,
-                salt: Convert.FromBase64String(user.Salt),
-                prf: KeyDerivationPrf.HMACSHA1,
-                iterationCount: 10,
-                numBytesRequested: 256 / 8));
-
-            if (!user.HashedPassword.Equals(passwordHash))
-            {
-                return null;
-            }
-
-            // on auth fail: null is returned because user is not found
-            // on auth success: user object is returned
             return user;
         }
 
         public async Task<IEnumerable<User>> GetAll()
         {
-            // wrapped in "await Task.Run" to mimic fetching users from a db
-            return await Task.Run(() => _ctx.Clients.ToListAsync());
+            return await _repo.Index();
         }
 
-        public async Task<Client> SignUp(Address address, Client client)
+        public async Task<User> Get(int id)
         {
-            await _ctx.Addresses.AddAsync(address);
-            await _ctx.Clients.AddAsync(client);
-            client.Address = address;
-            await _ctx.SaveChangesAsync();
-            return client;
+            return await _repo.Get(id);
+        }
+
+        public Task<Client> SignUp(Address address, Client client)
+        {
+            throw new NotImplementedException();
         }
     }
 }
