@@ -6,7 +6,7 @@ namespace SocialSwap.Domain.AggregatesModel.ReportAggregate
     public class Report
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
         [Required]
         public DateTime CreateDate { get; set; }
         [Required]

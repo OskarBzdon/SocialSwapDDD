@@ -8,14 +8,14 @@ namespace SocialSwap.Domain.AggregatesModel
 {
     public interface ICrudService<T> where T : class
     {
-        public Task<T> Create(T entity);
+        public T Create(T entity);
 
-        public Task<T> Delete(T entity);
+        public T Delete(T entity);
 
-        public Task<T> Get(int id);
+        public T Get(string id);
 
-        public Task<IEnumerable<T>> Index();
+        public IEnumerable<T> Index(string? selfid);
 
-        public Task<T> Update(T entity);
+        public T Update(T entity);
     }
 }

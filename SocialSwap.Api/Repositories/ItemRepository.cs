@@ -1,4 +1,5 @@
-﻿using SocialSwap.Domain.AggregatesModel;
+﻿using Microsoft.EntityFrameworkCore;
+using SocialSwap.Domain.AggregatesModel;
 using SocialSwap.Domain.AggregatesModel.ItemAggregate;
 using SocialSwap.Infrastructure.DataSources;
 
@@ -13,34 +14,34 @@ namespace SocialSwap.Api.Repositories
             _ctx = ctx;
         }
 
-        public async Task<Item> Create(Item entity)
+        public Item Create(Item entity)
         {
-            await _ctx.Items.AddAsync(entity);
-            await _ctx.SaveChangesAsync();
+            _ctx.Items.Add(entity);
+            _ctx.SaveChanges();
             return entity;
         }
 
-        public async Task<Item> Delete(Item entity)
+        public Item Delete(Item entity)
         {
             _ctx.Items.Remove(entity);
-            await _ctx.SaveChangesAsync();
+            _ctx.SaveChanges();
             return entity;
         }
 
-        public async Task<Item> Get(int id)
+        public Item Get(string id)
         {
-            return _ctx.Items.FirstOrDefault(f => f.Id == id);
+            return _ctx.Items.Include(i =>i.Owner).FirstOrDefault(f => f.Id.Equals(id));
         }
 
-        public async Task<IEnumerable<Item>> Index()
+        public IEnumerable<Item> Index(string? selfId = null)
         {
-            return _ctx.Items.ToList();
+            return _ctx.Items.Where(w => w.SwapDate == null).Where(w => !w.Owner.Id.Equals(selfId)).Include(i => i.Owner).ToList();
         }
 
-        public async Task<Item> Update(Item entity)
+        public Item Update(Item entity)
         {
             _ctx.Items.Update(entity);
-            await _ctx.SaveChangesAsync();
+            _ctx.SaveChanges();
             return entity;
         }
     }

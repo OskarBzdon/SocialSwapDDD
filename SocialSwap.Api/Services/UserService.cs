@@ -27,12 +27,12 @@ namespace SocialSwap.Api.Services
 
         public async Task<IEnumerable<User>> GetAll()
         {
-            return await _repo.Index();
+            return  _repo.Index();
         }
 
-        public async Task<User> Get(int id)
+        public async Task<User> Get(string id)
         {
-            return await _repo.Get(id);
+            return  _repo.Get(id);
         }
 
         public Task<Client> SignUp(Address address, Client client)

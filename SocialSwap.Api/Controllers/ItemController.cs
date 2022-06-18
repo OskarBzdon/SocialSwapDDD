@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SocialSwap.Api.Attributes;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using SocialSwap.Api.Dtos;
 using SocialSwap.Api.Services;
-using SocialSwap.Domain.AggregatesModel;
 using SocialSwap.Domain.AggregatesModel.ItemAggregate;
 using SocialSwap.Domain.AggregatesModel.UserAggregate;
+using System.Security.Claims;
 
 namespace SocialSwap.Api.Controllers
 {
@@ -12,32 +13,41 @@ namespace SocialSwap.Api.Controllers
     [Route("[controller]")]
     public class ItemController : ControllerBase
     {
-        private readonly IItemService _service;
-        public ItemController(IItemService service)
+        private readonly ItemService _service;
+        private readonly UserManager<User> _userManager;
+
+        public ItemController(IItemService service, UserManager<User> userManager)
         {
-            _service = service;
+            _service = (ItemService?)service;
+            _userManager = userManager;
         }
 
+        [AllowAnonymous]
         [HttpGet]
+        [Route("getall")]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(_service.Index());
+            User? currentUser = null;
+            if (this.User.Identity.Name != null)
+                currentUser = await _userManager.FindByNameAsync(this.User?.Identity?.Name);
+            return Ok(_service.Index(currentUser?.Id));
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("details")]
+        public async Task<IActionResult> GetById([FromQuery]string id)
         {
             return Ok(_service.Get(id));
         }
 
         [Authorize]
         [HttpPost]
+        [Route("additem")]
         public async Task<IActionResult> Create([FromQuery] DtoItem model)
         {
-            User? identity = HttpContext.Items["User"] as User;
-            if (identity == null)
-                return BadRequest(identity);
-            DisplayedItem entity = new DisplayedItem() { Title = model.Title, Description = model.Description, DisplayDate = DateTime.Now};
+            var currentUser = await _userManager.FindByNameAsync(this.User.Identity.Name);
+            Item entity = new Item() { Title = model.Title, Description = model.Description, Owner = currentUser as Client};
             return Ok(_service.Create(entity));
         }
     }

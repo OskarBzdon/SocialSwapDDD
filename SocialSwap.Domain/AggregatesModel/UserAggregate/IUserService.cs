@@ -6,7 +6,7 @@ namespace SocialSwap.Domain.AggregatesModel.UserAggregate
     {
         Task<AuthenticateResponse> Authenticate(AuthenticateRequest model);
         Task<IEnumerable<User>> GetAll();
-        Task<User> Get(int id);
+        Task<User> Get(string id);
         Task<Client> SignUp(Address address, Client client);
     }
 }

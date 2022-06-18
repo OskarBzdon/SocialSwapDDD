@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SocialSwap.Infrastructure.DataSources;
 
@@ -11,9 +12,10 @@ using SocialSwap.Infrastructure.DataSources;
 namespace SocialSwap.Api.Migrations
 {
     [DbContext(typeof(SocialSwapContext))]
-    partial class SocialSwapContextModelSnapshot : ModelSnapshot
+    [Migration("20220616152421_ItemConfigNoAction")]
+    partial class ItemConfigNoAction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,7 +231,7 @@ namespace SocialSwap.Api.Migrations
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("SwapDate")
+                    b.Property<DateTime>("SwapDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")

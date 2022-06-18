@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Identity;
 using SocialSwap.Domain.AggregatesModel.ConversationAggregate;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
@@ -6,32 +7,15 @@ using System.Text.Json.Serialization;
 
 namespace SocialSwap.Domain.AggregatesModel.UserAggregate
 {
-    public abstract class User
+    public abstract class User : IdentityUser
     {
-        [Key]
-        public int Id { get; set; }
-        [Required]
-        public string Name { get; set; }
-        [Required]
-        public string Surname { get; set; }
-        [Required]
-        public DateTime Birthdate { get; set; }
-        [Required]
-        [Phone]
-        public string PhoneNumber { get; set; }
-        [Required]
-        [EmailAddress]
-        public string EmailAddress { get; set; }
-        [Required]
+        public string? Name { get; set; }
+        public string? Surname { get; set; }
+        public DateTime? Birthdate { get; set; }
         [JsonIgnore]
-        public string HashedPassword { get; set; }
-        [Required]
-        [JsonIgnore]
-        public string Salt { get; set; }
-        [Required]
-        public string RefreshToken { get; set; }
-        [Required]
-        public DateTime RefreshTokenExpirationDate { get; set; }
+        public string? Salt { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpirationDate { get; set; }
 
         public virtual ICollection<Conversation> Conversations { get; set; }
 

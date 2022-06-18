@@ -6,7 +6,7 @@ namespace SocialSwap.Domain.AggregatesModel.ConversationAggregate
     public class Message
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
         [Required]
         [MaxLength(100)]
         public string Text { get; set; }

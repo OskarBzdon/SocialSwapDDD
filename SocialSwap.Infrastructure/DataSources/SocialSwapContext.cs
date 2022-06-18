@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SocialSwap.Domain.AggregatesModel.ConversationAggregate;
 using SocialSwap.Domain.AggregatesModel.ItemAggregate;
 using SocialSwap.Domain.AggregatesModel.OpinionAggregate;
@@ -9,20 +11,18 @@ using SocialSwap.Infrastructure.Configurations;
 
 namespace SocialSwap.Infrastructure.DataSources
 {
-    public class SocialSwapContext : DbContext
+    public class SocialSwapContext : IdentityDbContext<User>
     {
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Administrator> Administrators { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<CompleteReport> CompleteReports { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
-        public DbSet<DisplayedItem> DisplayedItems { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Moderator> Moderators { get; set; }
         public DbSet<Opinion> Opinions { get; set; }
         public DbSet<Report> Reports { get; set; }
-        public DbSet<SwapItem> SwapItems { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public SocialSwapContext() : base()
         {
@@ -39,7 +39,8 @@ namespace SocialSwap.Infrastructure.DataSources
             modelBuilder.ApplyConfiguration(new ReportEFConfiguration());
             modelBuilder.ApplyConfiguration(new OpinionEFConfiguration());
             modelBuilder.ApplyConfiguration(new ClientEFConfiguration());
-
+            modelBuilder.ApplyConfiguration(new ItemEFConfiguration());
+            modelBuilder.ApplyConfiguration(new TransactionEFConfiguration());
         }
     }
 }

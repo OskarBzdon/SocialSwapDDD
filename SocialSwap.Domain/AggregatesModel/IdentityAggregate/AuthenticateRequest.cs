@@ -5,7 +5,8 @@ namespace SocialSwap.Domain.AggregatesModel.IdentityAggregate
     public class AuthenticateRequest
     {
         [Required]
-        public string Login { get; set; }
+        [EmailAddress]
+        public string AddressEmail { get; set; }
 
         [Required]
         public string Password { get; set; }

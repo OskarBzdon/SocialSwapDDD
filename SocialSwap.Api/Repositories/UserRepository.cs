@@ -24,12 +24,11 @@ namespace SocialSwap.Api.Repositories
 
         public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest model)
         {
-
-            var user = _ctx.Clients.FirstOrDefault(x => x.EmailAddress.Equals(model.Login.ToLower()));
+            var user = _ctx.Clients.FirstOrDefault(x => x.Email.Equals(model.AddressEmail.ToLower()));
             if (user == null) return null;
             var hashPassword = GenerateHash(model.Password, user!.Salt);
 
-            if (!hashPassword.Equals(user.HashedPassword)) return null;
+            if (!hashPassword.Equals(user.PasswordHash)) return null;
 
             var token = GenerateJwtToken(user);
 
@@ -37,27 +36,27 @@ namespace SocialSwap.Api.Repositories
             return result;
         }
 
-        public Task<User> Create(User entity)
+        public User Create(User entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<User> Delete(User entity)
+        public User Delete(User entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<User> Get(int id)
+        public User Get(string id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<User>> Index()
+        public IEnumerable<User> Index(string? selfId = null)
         {
             throw new NotImplementedException();
         }
 
-        public Task<User> Update(User entity)
+        public User Update(User entity)
         {
             throw new NotImplementedException();
         }
@@ -68,7 +67,7 @@ namespace SocialSwap.Api.Repositories
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id) }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

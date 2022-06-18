@@ -7,7 +7,7 @@ namespace SocialSwap.Domain.AggregatesModel.OpinionAggregate
     public class Opinion
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
         public bool IsAnonymous { get; set; }
         [Required]
         [MaxLength(300)]

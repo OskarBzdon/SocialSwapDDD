@@ -4,7 +4,7 @@ namespace SocialSwap.Domain.AggregatesModel.IdentityAggregate
 {
     public class AuthenticateResponse
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string EmailAddress { get; set; }
@@ -16,7 +16,7 @@ namespace SocialSwap.Domain.AggregatesModel.IdentityAggregate
             Id = user.Id;
             Name = user.Name;
             Surname = user.Surname;
-            EmailAddress = user.EmailAddress;
+            EmailAddress = user.Email;
             Token = token;
         }
     }

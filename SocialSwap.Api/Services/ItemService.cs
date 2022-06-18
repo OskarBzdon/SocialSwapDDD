@@ -6,35 +6,35 @@ namespace SocialSwap.Api.Services
 {
     public class ItemService : IItemService
     {
-        private readonly ICrudRepository<Item> _repo;
+        private readonly ItemRepository _repo;
         public ItemService(ICrudRepository<Item> repo)
         {
-            _repo = repo;
+            _repo = (ItemRepository?)repo;
         }
 
-        public async Task<Item> Create(Item entity)
+        public Item Create(Item entity)
         {
-            return await _repo.Create(entity);
+            return _repo.Create(entity);
         }
 
-        public async Task<Item> Delete(Item entity)
+        public Item Delete(Item entity)
         {
-            return await _repo.Delete(entity);
+            return  _repo.Delete(entity);
         }
 
-        public async Task<Item> Get(int id)
+        public Item Get(string id)
         {
-            return await _repo.Get(id);
+            return  _repo.Get(id);
         }
 
-        public async Task<IEnumerable<Item>> Index()
+        public IEnumerable<Item> Index(string? selfId = null)
         {
-            return await _repo.Index();
+            return  _repo.Index(selfId);
         }
 
-        public async Task<Item> Update(Item entity)
+        public Item Update(Item entity)
         {
-            return await _repo.Update(entity);
+            return  _repo.Update(entity);
         }
     }
 }

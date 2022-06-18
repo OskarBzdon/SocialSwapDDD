@@ -11,7 +11,7 @@ namespace SocialSwap.Infrastructure.Configurations
             var addresses = new List<Address>();
             addresses.Add(new Address
             {
-                Id = 1,
+                Id = "1",
                 Country = "Poland",
                 City = "Warsaw",
                 Postcode = "00-110",
@@ -20,7 +20,7 @@ namespace SocialSwap.Infrastructure.Configurations
             });
             addresses.Add(new Address
             {
-                Id = 2,
+                Id = "2",
                 Country = "Poland",
                 City = "Warsaw",
                 Postcode = "00-120",
@@ -29,7 +29,7 @@ namespace SocialSwap.Infrastructure.Configurations
             });
             addresses.Add(new Address
             {
-                Id = 3,
+                Id = "3",
                 Country = "Poland",
                 City = "Warsaw",
                 Postcode = "00-130",
