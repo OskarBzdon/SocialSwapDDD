@@ -32,7 +32,12 @@ namespace SocialSwap.Api.Services
             return  _repo.Index(selfId);
         }
 
-        public Item Update(Item entity)
+		public IEnumerable<Item> MyList(string clientId)
+		{
+            return _repo.Index().Where(w => w.Owner.Id.Equals(clientId));
+        }
+
+		public Item Update(Item entity)
         {
             return  _repo.Update(entity);
         }

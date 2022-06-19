@@ -1,0 +1,56 @@
+﻿@page "/items"
+
+@using SocialSwap.Application.Services
+@using SocialSwap.Domain.AggregatesModel.ItemAggregate
+
+@inject SocialSwap.Application.Services.IItemService ItemService
+@inject NavigationManager NavigationManager
+
+
+<h3>Items you can swap!</h3>
+@if(itemsRequest == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>DisplayDate</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in itemsRequest)
+            {
+                <tr>
+                    <td>
+                        @item.Title<br/>                    
+                    </td>
+                    <td>
+                        @item.Description<br/>                    
+                    </td>
+                    <td>
+                        @item.DisplayDate<br/>                    
+                    </td>
+                    <td>
+                        <button class="button" @onclick="@(()=>NavigationManager.NavigateTo("/transaction/" + item.Id))">Swap</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+    private IEnumerable<Item> itemsRequest { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        itemsRequest = await ItemService.GetAll();
+    }
+}

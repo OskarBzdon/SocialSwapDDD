@@ -10,5 +10,7 @@ namespace SocialSwap.Domain.AggregatesModel.IdentityAggregate
 
         [Required]
         public string Password { get; set; }
+
+        public bool RememberMe { get; set; }
     }
 }

@@ -1,0 +1,98 @@
+﻿@page "/transaction"
+@page "/transaction/{ItemId}"
+
+@using SocialSwap.Application.Services
+@using SocialSwap.Domain.AggregatesModel.ItemAggregate
+@using SocialSwap.Domain.AggregatesModel.TransactionAggregate
+
+@inject SocialSwap.Application.Services.IItemService ItemService
+@inject SocialSwap.Application.Services.ITransactionService TransactionService
+@inject NavigationManager NavigationManager
+
+<h1>Swap the item!</h1>
+
+@if (ItemDetails == null)
+{
+    <p>Loading...</p>
+}
+else if (resultTrsansaction == null)
+{
+    <h2>Item you want to swap:</h2>
+	<p><h3>Title: </h3> @ItemDetails.Title</p>
+    <p><h3>Description: </h3> @ItemDetails.Description</p>
+}
+
+@if(MyItems == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (MyItems.Count() == 0)
+{
+    <p>You don't have any items to swap!'</p>
+}
+else if (resultTrsansaction == null)
+{
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>DisplayDate</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in MyItems)
+            {
+                <tr>
+                    <td>
+                        @item.Title<br/>                    
+                    </td>
+                    <td>
+                        @item.Description<br/>                    
+                    </td>
+                    <td>
+                        @item.DisplayDate<br/>                    
+                    </td>
+                    <td>
+                        <button class="button" name="@item.Title" @onclick="@(() => HandleSwap(item.Id))">Choose to swap</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    <p>Type delivery type:</p>
+    <input type="text" @oninput="@((e) => { DeliveryType=(string)e.Value;})"/>
+    <br /> <br />
+    <p>Choose planned delivery date:</p>
+    <input type="date" @oninput="@((e) => { DeliveryDate=DateTime.Parse((string)e.Value);})"/>
+}
+else
+{
+    <h2>Excelent! You've just swapped an item!</h2>
+}
+
+@code {
+    [Parameter]
+    public string ItemId { get; set; }
+
+    public string DeliveryType { get; set; }
+    public DateTime DeliveryDate { get; set; }
+
+    public Item ItemDetails { get; set; }
+
+    public IEnumerable<Item> MyItems { get; set; }
+
+    public Transaction resultTrsansaction { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ItemDetails = await ItemService.GetById(ItemId);
+        MyItems = await ItemService.GetAllMy();
+    }
+
+    public async Task HandleSwap(string offeredId){
+        resultTrsansaction = await TransactionService.CreateTransaction(offeredId, ItemId, DeliveryType, DeliveryDate);
+        NavigationManager.NavigateTo("/");
+    }
+}

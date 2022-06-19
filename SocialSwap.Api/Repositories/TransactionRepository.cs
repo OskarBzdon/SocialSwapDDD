@@ -37,9 +37,12 @@ namespace SocialSwap.Api.Repositories
 
         public IEnumerable<Transaction> GetAllMyTransactions(string clientId)
         {
-            var client = _ctx.Clients.Include(i => i.Transactions).FirstOrDefault(f => f.Id.Equals(clientId));
+            var client = _ctx.Clients
+                .Include(i => i.Transactions).ThenInclude(t => t.OfferedItem)
+                .Include(i => i.Transactions).ThenInclude(t => t.WantedItem)
+                .FirstOrDefault(f => f.Id.Equals(clientId));
             if (client == null) throw new Exception("Client null");
-            return client.Transactions;
+            return client.Transactions.Where(w => w.WantedItem.SwapDate == null).ToList();
         }
     }
 }

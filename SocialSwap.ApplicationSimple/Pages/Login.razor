@@ -1,0 +1,45 @@
+﻿@page "/login"
+@using System.Text
+@using System.Text.Json
+@inject HttpClient httpClient
+
+<h3>Please, sign in yourself:</h3>
+
+<div id="loginForm">
+	<a>Email addresss:</a> <br />
+	<input id="inEmail" type="email" @oninput="@((e) => { Email=(string)e.Value;})" />
+	<br />
+	<a>Password:</a> <br />
+	<input id="inPass" type="password" @oninput="@((e) => { Password=(string)e.Value;})" />
+	<br /> <br />
+	<button @onclick="() => TryLogin()">Sign in</button>
+</div>
+
+@code {
+	private string Email { get; set; }
+	private string Password { get; set; }
+
+	private class LoginResponse
+	{
+		public string token { get; set; }
+		public DateTime expiration { get; set; }
+	}
+
+	async void TryLogin()
+	{
+		var body = new { addressEmail = Email, password = Password, rememberMe = true };
+		var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+		var requestUri = "https://localhost:7000/users/login";
+		var response = await httpClient.PostAsJsonAsync(requestUri, content);
+		var resuest = content.ReadFromJsonAsync<JsonElement>();
+
+		Console.WriteLine(await response.Content.ReadAsStringAsync());
+		// convert response data to JsonElement which can handle any JSON data
+		var data = await response.Content.ReadFromJsonAsync<JsonElement>();
+
+		// get id property from JSON response data
+		var token = data.GetProperty("token").GetString();
+		Console.WriteLine(token);
+
+	}
+}

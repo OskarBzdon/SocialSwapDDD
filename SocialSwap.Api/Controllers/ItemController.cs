@@ -33,6 +33,15 @@ namespace SocialSwap.Api.Controllers
             return Ok(_service.Index(currentUser?.Id));
         }
 
+		[Authorize]
+		[HttpGet]
+		[Route("myitems")]
+        public async Task<IActionResult> MyItems()
+		{
+            var currentUser = await _userManager.FindByNameAsync(this.User?.Identity?.Name);
+            return Ok(_service.MyList(currentUser.Id));
+		}
+
         [AllowAnonymous]
         [HttpGet]
         [Route("details")]

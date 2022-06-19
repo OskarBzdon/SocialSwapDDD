@@ -1,0 +1,61 @@
+﻿@page "/transactionslist"
+
+@using SocialSwap.Domain.AggregatesModel.TransactionAggregate
+
+@inject SocialSwap.Application.Services.ITransactionService TransactionService
+
+<h1>Let's see my transactions!</h1>
+
+@if (MyTransactions == null)
+{
+	<p>Loading...</p>
+}
+else
+{
+	<table class='table'>
+        <thead>
+            <tr>
+                <th>Offered Item</th>
+                <th>Wanted Item</th>
+                <th>Planned delivery time</th>
+                <th>Delivery type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var transaction in MyTransactions)
+            {
+                <tr>
+                    <td>
+                        @transaction.OfferedItem.Title<br/>
+                    </td>
+                    <td>
+                        @transaction.WantedItem.Title<br/>
+                    </td>
+                    <td>
+                        @transaction.DeliveryTime<br/>
+                    </td>
+                    <td>
+                        @transaction.DeliveryType<br/>
+                    </td>
+                    <td>
+                        <button class="button" @onclick="@(() => HandleConfirm(transaction.Id))">Confirm</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    public IEnumerable<Transaction> MyTransactions { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        MyTransactions = await TransactionService.GetAllMyTransactions();
+    }
+
+    public async Task HandleConfirm(string transactionId){
+        await TransactionService.ConfirmTransaction(transactionId);
+    }
+}

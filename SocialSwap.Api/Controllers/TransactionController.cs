@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SocialSwap.Api.Dtos;
 using SocialSwap.Domain.AggregatesModel.ItemAggregate;
 using SocialSwap.Domain.AggregatesModel.TransactionAggregate;
 using SocialSwap.Domain.AggregatesModel.UserAggregate;
@@ -33,15 +34,15 @@ namespace SocialSwap.Api.Controllers
 
         [HttpPost]
         [Route("swapitem")]
-        public async Task<IActionResult> SwapWthItem([FromQuery] string wantedItemId, string offeredItemId, DateTime deliveryTime, string deliveryType)
+        public async Task<IActionResult> SwapWthItem([FromBody] SwapDto delivery)
         {
             Transaction transaction = new Transaction();
-            var diplayedItem = _itemService.Get(wantedItemId);
+            var diplayedItem = _itemService.Get(delivery.wantedItemId);
             transaction.WantedItem = diplayedItem;
             transaction.Receiver = await _userManager.FindByIdAsync(transaction.WantedItem.Owner.Id) as Client;
-            transaction.OfferedItem = _itemService.Get(offeredItemId);
-            transaction.DeliveryTime = deliveryTime;
-            transaction.DeliveryType = deliveryType;
+            transaction.OfferedItem = _itemService.Get(delivery.offeredItemId);
+            transaction.DeliveryTime = delivery.deliveryTime;
+            transaction.DeliveryType = delivery.deliveryType;
             return Ok(_transService.CreateTransaction(transaction));
         }
 
